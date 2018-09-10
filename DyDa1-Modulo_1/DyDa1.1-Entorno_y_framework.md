@@ -43,4 +43,4 @@ Para todo el proceso se considera ya inicializada la blockchain con Ganache y de
 > ```
 - #### Acceda a [Ethgasstation](https://ethgasstation.info) y convierta el precio del gas en ese instante a Ether
 > En el momento de realizar el ejercicio, el gas está a 3.5 Gwei. Esto es un total de 3500000000 wei
-![Capture](images/gas.png)
+![Capture](./images/gas.png)
