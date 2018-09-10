@@ -22,14 +22,14 @@ Para todo el proceso se considera ya inicializada la blockchain con Ganache y de
 - #### Número de bloque en el que se encuentra la blockchain en ese instante. ¿Por qué?
 > El número del bloque es pequeño, por lo que se ha comentado anteriormente, la blockchain
 > se mantiene en stand-by a la espera de la existencia de nuevas transacciones:
-> ````
+> ```
 > truffle(development)> web3.eth.blockNumber
 > 4
 > ```
 > La existencia de 4 bloques es porque en el momento de la creción se crea el bloque origen y
 > las transferencias para el despliegue del SmartContract.
 - #### Direccóion del host de la blockchain.
-> ````
+> ```
 > truffle(development)> web3.currentProvider
 > HttpProvider {
 > host: 'http://127.0.0.1:8545',
