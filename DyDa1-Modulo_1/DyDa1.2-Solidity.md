@@ -61,4 +61,12 @@ Se realizará una prueba con la función _Transfer_, para ello necesitaremos imp
 
 ![Capture11](./images/Transfer.png)
 
-Con esto se completa la transacción.
+Ahora podemos utilizar la función *BalanceOf* para comprobar el balance de las cuentas y confirmar que la transacción se ha realizado correctamente:
+
+![Capture12](./images/BalanceOf.png)
+
+El resultado arrojado en la consulta es el siguiente:
+
+![Capture13](./images/Request.png)
+
+Se observa que existe transferencia entre ambas cuentas.
