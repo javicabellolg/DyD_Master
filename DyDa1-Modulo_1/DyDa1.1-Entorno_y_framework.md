@@ -1,6 +1,6 @@
 # Master Ethereum, Tecnología Blockchain y Criptoeconomía
 ## Diseño y Desarrollo - 
-## Modulo 1: Fundamentos y Herramientas
+## Modulo 1: Fundamentos y Herramientas - Entorno y Framework
 Para todo el proceso se considera ya inicializada la blockchain con Ganache y desplegado el SmartContract según el tutorial visto en clase.
 - #### Comprobar que exite conexión a un nodo
 > Para realizar dicha comprobación se interactuará con la blockchain haciendo uso de web3:
