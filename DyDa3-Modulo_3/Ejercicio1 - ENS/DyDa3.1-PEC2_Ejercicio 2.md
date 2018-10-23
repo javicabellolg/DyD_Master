@@ -1,8 +1,7 @@
 # Master Ethereum, Tecnología Blockchain y Criptoeconomía
 ## Diseño y Desarrollo - 
 ## PEC2
-### Ejercicio 1
-#### Construya y configure su propia blockchain a partir de un archivo génesis , cree su cuenta y consiga ether a partir de la minería
+### Ejercicio 1 - ENS
 
 > Para la realización de este ejercicio, se ha tomado como referencia la siguiente documentación:
 > [ENS - Oficial](http://docs.ens.domains/en/latest/quickstart.html)
