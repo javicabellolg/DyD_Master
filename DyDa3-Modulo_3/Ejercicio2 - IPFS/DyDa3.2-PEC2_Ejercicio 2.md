@@ -7,7 +7,7 @@
 > [IPFS - Oficial](https://docs.ipfs.io)
 > [IPFS - Medium](https://medium.com/@merunasgrincalaitis/the-ultimate-end-to-end-tutorial-to-create-and-deploy-a-fully-descentralized-dapp-in-ethereum-18f0cf6d7e0e)
 
-### Preparando el entorno
+#### Preparando el entorno
 
 > Se recomienda seguir la documentación oficial para
 > la instalación de IPFS. Para la realización de este
@@ -60,7 +60,7 @@ Esto se debe a que el puerto está ocupado, por lo que es necesario modificar el
 
 Con el nodo ya inicializado, se deberá inicializar ```ganache-cli```, tal y como se indica en el siguiente [enlace](https://github.com/javicabellolg/DyD_Master/blob/master/DyDa1-Modulo_1/DyDa1.2-Solidity.md)
 
-### Subiendo la aplicación a IPFS
+#### Subiendo la aplicación a IPFS
 
 Con todo el entorno ya listo, se puede proceder a subir la aplicación a IPFS. Para ello, es necesario subir el código de la aplicación alojado en:
 
@@ -80,7 +80,7 @@ contracts  src
 javi@javi-X550CC:~/Escritorio/blockchain/pet-shop-tutorial$ ls src/
 css  fonts  images  index.html  js  pets.json
 ```
-#### Modificaciones previas a la subida
+##### Modificaciones previas a la subida
 
 Antes de realizar la subida, para asegurar que la aplicación funcione correctamente, es necesario realizar algunos cambios relacionados con rutas relativas que se encuentran en el archivo ![app.js](./build/src/js/app.js), para que detecte correctamente el contrato de adopción y el archivo ![pets.json](./build/src/pets.json).
 
@@ -98,7 +98,7 @@ $.getJSON('Adoption.json', function(data) { ----> $.getJSON('../contracts/Adopti
 > En la versión entregada ya se encuentran los cambios realizados.
 > Se indican aquí para tenerlo en cuenta si alguien realiza el proceso desde el inicio.
 
-#### Subida IPFS
+##### Subida IPFS
 
 Para subir todo a IPFS, se indica a continuación el comando:
 
@@ -141,7 +141,7 @@ added QmeBnh7wadiUW13xmgjLsmTW1Fy5K4ATzrKLndfgSFiRAF build
 
 Con este hash que se ha devuelto se puede acceder vía navegador a la aplicación.
 
-### Accediendo a la dAPP
+#### Accediendo a la dAPP
 
 Para acceder a la dAPP, se utilizará el gateway de ipfs. En el siguiente [link](https://gateway.ipfs.io/ipfs/QmeBnh7wadiUW13xmgjLsmTW1Fy5K4ATzrKLndfgSFiRAF/src/) es el enlace a la aplicación desde el que se puede acceder a la misma.
 
