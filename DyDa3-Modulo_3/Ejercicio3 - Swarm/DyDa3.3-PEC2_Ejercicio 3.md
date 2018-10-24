@@ -99,13 +99,13 @@ $ swarm --bzzaccount <dir>
 Si todo es correcto, conectará correctamente:
 
 ```
-javi@javi-X550CC:~/Escritorio/blockchain/pet-shop-tutorial$ __geth account new__
+javi@javi-X550CC:~/Escritorio/blockchain/pet-shop-tutorial$ geth account new
 INFO [10-24|10:06:16.220] Maximum peer count                       ETH=25 LES=0 total=25
 Your new account is locked with a password. Please give a password. Do not forget this password.
 Passphrase: 
 Repeat passphrase: 
-__Address: {31501038d3e8acc77cbc8a47172d8acd32d26cac}__
-javi@javi-X550CC:~/Escritorio/blockchain/pet-shop-tutorial$ __swarm --bzzaccount 31501038d3e8acc77cbc8a47172d8acd32d26cac__
+Address: {31501038d3e8acc77cbc8a47172d8acd32d26cac}
+javi@javi-X550CC:~/Escritorio/blockchain/pet-shop-tutorial$ swarm --bzzaccount 31501038d3e8acc77cbc8a47172d8acd32d26cac
 INFO [10-24|10:06:37.934] Maximum peer count                       ETH=25 LES=0 total=25
 Unlocking swarm account 0x31501038d3e8acc77cBC8A47172D8ACd32D26cAC [1/3]
 Passphrase: 
@@ -124,7 +124,6 @@ INFO [10-24|10:06:44.112] Loaded EC keys                           
 INFO [10-24|10:06:44.112] Streamer started 
 INFO [10-24|10:06:44.183] IPC endpoint opened                      url=/home/javi/.ethereum/bzzd.ipc
 ```
-> Se han remarcado los punto clave de la salida. En la imagen se observa como se inicializa el nodo de swarm.
 
 Ahora se puede proceder a subir la aplicación a swarm. Al igual que se hizo en el [Ejercicio 2](https://github.com/javicabellolg/DyD_Master/blob/master/DyDa3-Modulo_3/Ejercicio2%20-%20IPFS/DyDa3.2-PEC2_Ejercicio%202.md), se subirá el directorio ![build](./build).
 
