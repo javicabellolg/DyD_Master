@@ -4,6 +4,12 @@ body {
   margin-top: 10%;
   font-family: "Open Sans", sans-serif;
 }
+ bodyclient {
+  margin-left: 60%;
+  margin-right: 60%;
+  margin-top: 10%;
+  font-family: "Open Sans", sans-serif;
+}
 
 label {
   display: inline-block;
