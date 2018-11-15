@@ -4,14 +4,11 @@ import "./Ownable.sol";
 import "./JCLToken.sol";
 
 contract JCLMain is Ownable {
-    /////// VARIABLES DE ESTADO ////
     uint16 convRate = 1;
     JCLToken public jcltoken;
-    ////// EVENTOS ///////////
 
     event billRegister (uint billId, uint billAmount, address billRequest);
 
-    ////// ESTRUCTURAS ///////
 
     struct Bill {
         uint id;
@@ -21,17 +18,9 @@ contract JCLMain is Ownable {
 
     Bill[] public bills;
 
-    ////// MAPPINGS ///////
 
     mapping (address => Bill) ownerBill;   // Se crea un mapping que cree un par clave - valor de address y la Struct que tenemos creada. 
                                             // Así será este únicamente el que almacene las facturas activas y será mas fácil eliminarlas.
-
-    ////// MODIFICADORES /////
-
-    //modifier onlyBillRequested(uint _billId, address _client) {
-    //    require(_billId = ownerBill[_client].id);
-    //    _;
-    //}
 
     modifier onlyExactlyAmount(uint _amount, address _client) {
         require(_amount == ownerBill[_client].amount);
@@ -42,8 +31,6 @@ contract JCLMain is Ownable {
         require(_id == ownerBill[_client].id);
         _;
     }
-
-    ////// FUNCIONES //////
 
     constructor(address _addressJclToken) public {
         owner == msg.sender;
