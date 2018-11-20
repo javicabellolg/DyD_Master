@@ -1,3 +1,14 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//		Nombre: JCLMain.sol
+//		Autor: Javier Cabello Laguna
+//		Version: 0.2
+//		Descripción:
+//			Versión inicial del método de pago. Todo incluído en un único contrato, no se realiza distinción entre cliente y proveedor. Valida
+//			conceptos para desarrollo y toma de estructuras. No tiene funcionalidad en la aplicación.
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 pragma solidity 0.4.24;
 
 import "./Ownable.sol";
@@ -9,7 +20,6 @@ contract JCLMain is Ownable {
 
     event billRegister (uint billId, uint billAmount, address billRequest);
 
-
     struct Bill {
         uint id;
         uint amount;
@@ -18,10 +28,14 @@ contract JCLMain is Ownable {
 
     Bill[] public bills;
 
-
-    mapping (address => Bill) ownerBill;   // Se crea un mapping que cree un par clave - valor de address y la Struct que tenemos creada. 
+    mapping (address => Bill) public ownerBill;   // Se crea un mapping que cree un par clave - valor de address y la Struct que tenemos creada. 
                                             // Así será este únicamente el que almacene las facturas activas y será mas fácil eliminarlas.
 
+    constructor(address _addressJclToken) public {
+        //owner == msg.sender; ---> No es necesario, Ownable ya lo ejecuta.
+        jcltoken = JCLToken(_addressJclToken);
+    }
+   
     modifier onlyExactlyAmount(uint _amount, address _client) {
         require(_amount == ownerBill[_client].amount);
         _;
@@ -32,17 +46,10 @@ contract JCLMain is Ownable {
         _;
     }
 
-    constructor(address _addressJclToken) public {
-        owner == msg.sender;
-	jcltoken = JCLToken(_addressJclToken);
-    }
-
     function billRegistry(uint _id, uint _amount, address _client) external onlyOwner {
         ownerBill[_client].id = _id;
         ownerBill[_client].amount = _amount;
         ownerBill[_client].ownerSupply = msg.sender;
-        //bills.push(_id, _amount);
-        //ownerBill[_id] = _client;
         emit billRegister(_id, _amount, _client);
     }
 

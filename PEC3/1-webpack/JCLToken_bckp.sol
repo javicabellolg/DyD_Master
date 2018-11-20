@@ -11,6 +11,7 @@
 pragma solidity 0.4.24;  //Se fija la versión que es lo que se ha probado
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";  //Se ha instalado previamente con $ npm install openzeppelin-solidity
+import "./ConvertLib.sol";
 
 contract JCLToken is ERC20 {
 
@@ -31,6 +32,10 @@ contract JCLToken is ERC20 {
          balances[receiver] += amount;
          emit Transfer(msg.sender, receiver, amount);
          return true;
+    }
+
+    function getBalanceInEth(uint _amount, uint16 _conv) public view returns(uint){
+         return ConvertLib.convert(_amount, _conv);
     }
 
     function getBalance(address addr) public view returns(uint) {

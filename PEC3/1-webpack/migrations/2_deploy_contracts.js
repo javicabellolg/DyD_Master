@@ -1,10 +1,9 @@
-var ConvertLib = artifacts.require('./ConvertLib.sol')
-var MetaCoin = artifacts.require('./MetaCoin.sol')
 var JCLToken = artifacts.require('./JCLToken.sol')
+var JCLFactory = artifacts.require('./JCLFactory.sol')
+var CreateBills = artifacts.require('./CreateBills.sol')
 
 module.exports = function (deployer) {
-  deployer.deploy(ConvertLib)
-  deployer.link(ConvertLib, MetaCoin)
-  deployer.deploy(MetaCoin)
-  deployer.deploy(JCLToken)
+  deployer.deploy(JCLToken);
+  deployer.deploy(JCLFactory);
+  deployer.deploy(CreateBills, "0x03", "0x00", 1, 10);
 }
