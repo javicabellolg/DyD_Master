@@ -45,6 +45,14 @@ contract createBills is Ownable{
         delete ownerBill[msg.sender]; //El traspaso ya se ha hecho en la llamada.
     }
 
+    function payingWithToken(address _client, uint _amount) external payable {
+    	//require(_amount >= ownerBill[_client].amount);
+	//require(jcltoken.balanceOf(msg.sender) >= msg.value);
+	ownerBill[_client].amount -= _amount;    // Este amount va a ser la cantidad en ethers
+	address(ownerBill[msg.sender].ownerSupply).transfer(msg.value);
+	delete ownerBill[msg.sender];
+    }
+
     //function withdrawBill(uint _withdrawAmount) public {
     //    ownerBill[msg.sender].amount -= _withdrawAmount;
     //    owner.transfer(_withdrawAmount);

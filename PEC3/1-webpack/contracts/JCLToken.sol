@@ -16,25 +16,13 @@ contract JCLToken is ERC20 {
 
     string public name = "JCLToken";
     string public symbol = "JCL";
-    uint8 public decimals = 8;
-    uint public INITIAL_SUPPLY = 100000000;
+    uint8 public decimals = 2;
+    uint public INITIAL_SUPPLY = 1000000000000000000;
 
-    mapping (address => uint) balances;
+    mapping (address => uint) public balances;
 
     constructor() public {
         _mint(msg.sender, INITIAL_SUPPLY); //Esta función está definida en ERC20.sol para la asignación de tokens a una dirección.
     }
   
-    function sendCoin(address receiver, uint amount) public returns(bool sufficient) {
-         if (balances[msg.sender] < amount) return false;
-         balances[msg.sender] -= amount;
-         balances[receiver] += amount;
-         emit Transfer(msg.sender, receiver, amount);
-         return true;
-    }
-
-    function getBalance(address addr) public view returns(uint) {
-         return balances[addr];
-    }
-
 }
