@@ -11,13 +11,17 @@ pragma solidity 0.4.24;
 
 import "./Ownable.sol";
 import "./JCLToken.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract createBills is Ownable{
 
+    using SafeMath for uint;
     uint16 convRate = 1;
+    uint value;
     JCLToken public jcltoken;
 
     event billRegister (uint billId, uint billAmount, address billRequest);
+    event billStatus (uint amount);
 
     struct Bill {
         uint id;
@@ -31,35 +35,37 @@ contract createBills is Ownable{
     mapping (address => uint) private balances;
 
     constructor(address _client, address _supplyerAddress, uint _id, uint _amount) public {
-            owner = _client;
-            ownerBill[_client].id = _id;
+            //owner = _client;
+            owner = _supplyerAddress;
+	    ownerBill[_client].id = _id;
             ownerBill[_client].amount = _amount;
 	    ownerBill[_client].ownerSupply = _supplyerAddress;
             emit billRegister(_id, _amount, _client);
 	    jcltoken = JCLToken(_client);	    
     }
 
-    function payingOnlyETH() external payable {
-        require(msg.value >= ownerBill[msg.sender].amount);  //La llamada sería createBills.at("").payingOnlyETH.send({from: userAccount, value: web3.utils.toWei("cantidad", "ether")})
-	address(ownerBill[msg.sender].ownerSupply).transfer(msg.value);
-        delete ownerBill[msg.sender]; //El traspaso ya se ha hecho en la llamada.
-    }
+    modifier paying(address _client, uint _amount) {
+	ownerBill[_client].amount = ownerBill[_client].amount.sub(_amount);
+        emit billStatus(ownerBill[_client].amount);
+        _;
+    }    
 
-    function payingWithToken(address _client, uint _amount) external payable {
-    	//require(_amount >= ownerBill[_client].amount);
-	//require(jcltoken.balanceOf(msg.sender) >= msg.value);
-	ownerBill[_client].amount -= _amount;    // Este amount va a ser la cantidad en ethers
+    function payingWithToken(address _client, uint _amount) external payable paying(_client, _amount) returns (uint) {
 	address(ownerBill[msg.sender].ownerSupply).transfer(msg.value);
-	delete ownerBill[msg.sender];
+	value = msg.value.div(10**18);
+	ownerBill[_client].amount = ownerBill[_client].amount.sub(value);
+        if (ownerBill[_client].amount == 0) {
+		delete ownerBill[msg.sender];
+	}
+	return (ownerBill[_client].amount);
     }
-
-    //function withdrawBill(uint _withdrawAmount) public {
-    //    ownerBill[msg.sender].amount -= _withdrawAmount;
-    //    owner.transfer(_withdrawAmount);
-    //}
 
     function bye_bye() external onlyOwner {
         selfdestruct(msg.sender);
+    }
+
+    function () public payable{
+        revert();
     }
 
 }

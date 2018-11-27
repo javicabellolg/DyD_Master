@@ -20,10 +20,4 @@ contract JCLFactory {
             idToOwner[_id] = new createBills(_client, msg.sender, _id, _amount);  // Hay que tener en cuenta que realmente el mapping relaciona el id con el address del contrato que se genera. ¿quién es el owner, el cliente o el msg.sender?
         }
     }
-
-    function getAmount(address account) public constant returns (uint) {
-        //if (idToOwner[account] != 0) {
-        //    return (createBills(counters[account]).getAmount());
-        //}
-    }
 }
