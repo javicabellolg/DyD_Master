@@ -6,10 +6,14 @@ import { default as Web3 } from 'web3'
 import { default as contract } from 'truffle-contract'
 
 // Import our contract artifacts and turn them into usable abstractions.
-import metaCoinArtifact from '../../build/contracts/MetaCoin.json'
+import JCLTokenArtifact from '../../build/contracts/JCLToken.json'
+import FactoryArtifact from '../../build/contracts/JCLFactory.json' 
+import CreateArtifact from '../../build/contracts/CreateBills.json'
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
-const MetaCoin = contract(metaCoinArtifact)
+const JCLCoin = contract(JCLTokenArtifact)
+const Factory = contract(FactoryArtifact)
+const Create = contract(CreateArtifact)
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -22,8 +26,9 @@ const App = {
     const self = this
 
     // Bootstrap the MetaCoin abstraction for Use.
-    MetaCoin.setProvider(web3.currentProvider)
-
+    JCLCoin.setProvider(web3.currentProvider) 
+    Factory.setProvider(web3.currentProvider)
+    Create.setProvider(web3.currentProvider)
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
       if (err != null) {
@@ -52,9 +57,12 @@ const App = {
     const self = this
 
     let meta
-    MetaCoin.deployed().then(function (instance) {
+    let meta2
+
+    JCLCoin.deployed().then(function (instance) {
       meta = instance
-      return meta.getBalance.call(account, { from: account })
+      return meta.balanceOf(account, { from: account })
+      //return meta.getBalance.call(account, { from: account })
     }).then(function (value) {
       const balanceElement = document.getElementById('balance')
       balanceElement.innerHTML = value.valueOf()
@@ -62,28 +70,85 @@ const App = {
       console.log(e)
       self.setStatus('Error getting balance; see log.')
     })
+    
+    JCLCoin.deployed().then(function (instance) {
+	meta2 = instance
+        return meta2.balanceOf(account, { from: account })
+    }).then(function (value) {
+      const balanceClient = document.getElementById('balanceClientToken')
+      balanceClient.innerHTML = value.valueOf()
+    }).catch(function (e) {
+      console.log(e)
+      self.setStatus('Error getting balance; see log.')
+    })
+
   },
 
-  sendCoin: function () {
+  registerBill: function () {
     const self = this
 
-    const amount = parseInt(document.getElementById('amount').value)
-    const receiver = document.getElementById('receiver').value
+    JCLCoin.setProvider(web3.currentProvider)
+    JCLCoin.web3.eth.defaultAccount=web3.eth.accounts[0]    
+    //web3.personal.unlockAccount(web3.eth.defaultAccount)
+    Factory.setProvider(web3.currentProvider)
+    Factory.web3.eth.defaultAccount=web3.eth.accounts[0]
+    Create.setProvider(web3.currentProvider)
+    Create.web3.eth.defaultAccount=web3.eth.accounts[0]
+
+    const amount = parseInt(document.getElementById('amount_fact').value)
+    const id = parseInt(document.getElementById('id_fact').value)
+    const receiver = document.getElementById('debtor').value
+
+    console.log(receiver)
+    console.log(typeof(receiver))
 
     this.setStatus('Initiating transaction... (please wait)')
 
     let meta
-    MetaCoin.deployed().then(function (instance) {
-      meta = instance
-      return meta.sendCoin(receiver, amount, { from: account })
-    }).then(function () {
-      self.setStatus('Transaction complete!')
-      self.refreshBalance()
+    let fact
+
+    Factory.deployed().then(function (instance) {
+        fact = instance
+        console.log(fact)
+        fact.createBillContract(id, receiver, amount);
     }).catch(function (e) {
-      console.log(e)
-      self.setStatus('Error sending coin; see log.')
+        console.log(e)
     })
+
+  },
+
+  payBill: function () {
+    const self = this
+
+    JCLCoin.setProvider(web3.currentProvider)
+    JCLCoin.web3.eth.defaultAccount=web3.eth.accounts[0]
+    Factory.setProvider(web3.currentProvider)
+    Factory.web3.eth.defaultAccount=web3.eth.accounts[0]
+    Create.setProvider(web3.currentProvider)
+    Create.web3.eth.defaultAccount=web3.eth.accounts[0]
+
+    const amountPago = parseInt(document.getElementById('amount_pago').value)
+    const idPago = parseInt(document.getElementById('id_pago').value)
+    const amountETH = document.getElementById('amount_pagoETH').value
+
+
+    this.setStatus('Initiating transaction... (please wait)')
+
+    let create
+    let factory    
+
+    Factory.deployed().then(function (instance) {
+    	factory = instance
+    	console.log(instance)
+        console.log(factory.idToOwner(idPago))
+        factory.idToOwner(idPago).then(function (address) {
+		create = address
+                console.log(Create.at(create))
+		Create.at(create).payingWithToken(account, amountPago, {from: account, value: web3.toWei(amountETH, "ether")})
+	})
+    })    
   }
+
 }
 
 window.App = App

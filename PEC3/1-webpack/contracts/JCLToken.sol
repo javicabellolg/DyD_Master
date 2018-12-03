@@ -16,7 +16,7 @@ contract JCLToken is ERC20 {
 
     string public name = "JCLToken";
     string public symbol = "JCL";
-    uint8 public decimals = 2;
+    uint8 public decimals = 0;
     uint public INITIAL_SUPPLY = 1000000000000000000;
 
     mapping (address => uint) public balances;
