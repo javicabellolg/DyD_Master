@@ -164,6 +164,13 @@ const App = {
     let create
     let factory 
     let token
+    let balance
+
+    JCLCoin.deployed().then(function (instance) {
+        return instance.balanceOf(account, { from: account })
+    }).then(function (value) {
+    	balance = value
+    })
 
     Factory.deployed().then(function (instance) {
     	factory = instance
@@ -173,7 +180,7 @@ const App = {
 		create = address
 		var amountWei = web3.fromWei(amountETH, "ether")
 		console.log(amountETH)
-		if (amountETH > 0) {
+		if (amountETH > 0 && balance >= amountPago) {
 		  Create.at(create).payingWithToken(account, amountPago, {from: account, value: amountETH}).then(function(){
 			Create.at(create).ownerBill(account).then(function(data){
 				let dataCoin = data
@@ -185,9 +192,10 @@ const App = {
                                 console.log(e)
                                 self.setStatusClient('Error al procesar la transacción.Probablemente se deba a falta de fondos, por favor, revise sus fondos en su Wallet y revise el log.')
                   })
-		}
-		if (amountPago > 0) {
-		  Create.at(create).owner().then(function (direc) {
+		} else {alert("No tienes suficientes fondos")}
+		if (amountPago > 0 && balance >= amountPago) {
+		     console.log(balance)
+		     Create.at(create).owner().then(function (direc) {
 			console.log("Direc :"+direc)
 			App.payToken(direc, amountPago)
 		  })
