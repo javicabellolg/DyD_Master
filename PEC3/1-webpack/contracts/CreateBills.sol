@@ -15,6 +15,10 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 /** @title Create Bills. */
 
+contract JCLTokenInterface{
+    function balanceOf(address owner) public view returns (uint256);
+}
+
 contract createBills is Ownable{
 
     /** @dev Contrato patrón gestionado por un Factory Contract (JCLFactory). Define las funciones necesarias para efectuar el pago y finalizar los requerimientos de cobro.
@@ -28,6 +32,7 @@ contract createBills is Ownable{
     uint16 convRate = 1;
     uint value;
 
+    JCLTokenInterface jcltoken;
 
     // Definicion de Eventos
 
@@ -55,6 +60,7 @@ contract createBills is Ownable{
     }
 
     modifier paying(address _client, uint _amount) {
+        require(jcltoken.balanceOf(_client) >= _amount);
 	ownerBill[_client].amount = ownerBill[_client].amount.sub(_amount);
         emit billStatus(ownerBill[_client].amount);
         _;
@@ -73,6 +79,10 @@ contract createBills is Ownable{
 
     function supplyerAddress(address _client) public returns (address){
         return (ownerBill[_client].ownerSupply);
+    }
+
+    function setJCLTokenContractAddress(address _address) external {
+        jcltoken = JCLTokenInterface(_address);
     }
     
     function bye_bye() external onlyOwner {
