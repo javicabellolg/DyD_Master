@@ -17,6 +17,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract JCLTokenInterface{
     function balanceOf(address owner) public view returns (uint256);
+    function transfer(address to, uint256 value) public returns (bool);
 }
 
 contract createBills is Ownable{
@@ -32,7 +33,7 @@ contract createBills is Ownable{
     uint16 convRate = 1;
     uint value;
 
-    JCLTokenInterface jcltoken;
+    JCLTokenInterface public jcltoken;
 
     // Definicion de Eventos
 
@@ -61,6 +62,7 @@ contract createBills is Ownable{
 
     modifier paying(address _client, uint _amount) {
         require(jcltoken.balanceOf(_client) >= _amount);
+	jcltoken.transfer(ownerBill[_client].ownerSupply, _amount);
 	ownerBill[_client].amount = ownerBill[_client].amount.sub(_amount);
         emit billStatus(ownerBill[_client].amount);
         _;

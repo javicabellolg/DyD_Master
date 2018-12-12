@@ -21,6 +21,7 @@ const Create = contract(CreateArtifact)
 let accounts
 let account
 let receiverCoin
+let CreateAdd
 
 const App = {
   start: function () {
@@ -178,57 +179,68 @@ const App = {
         console.log(factory.idToOwner(idPago))
         factory.idToOwner(idPago).then(function (address) {
 		create = address
+		CreateAdd = address
 		var amountWei = web3.fromWei(amountETH, "ether")
 		console.log(amountETH)
-		if (amountETH > 0 && balance >= amountPago) {
-		  Create.at(create).payingWithToken(account, amountPago, {from: account, value: amountETH}).then(function(){
-			Create.at(create).ownerBill(account).then(function(data){
-				let dataCoin = data
-				let pendiente = dataCoin[1].toString()
-				self.setStatusClient("Transaccion realizada correctamente.Queda pendiente por pagar "+pendiente+" Weis de la factura con ID: "+idPago)
-				alert("Transaccion realizada correctamente.Queda pendiente por pagar "+pendiente+" Weis de la factura con ID: "+idPago)
-			})
-		  }).catch(function (e) {
+		if (amountETH >= 0 && balance >= amountPago) {
+		  JCLCoin.deployed().then(function (instance) {
+                	token = instance
+                	console.log("La dirección de control es: "+CreateAdd)
+                	token.transfer(CreateAdd, amountPago).catch(function (e) {
+                                console.log(e)
+                                self.setStatusClient('Error al procesar la transacciÃ³n.Probablemente se deba a falta de fondos, por favor, revise sus fondos en su Wallet y revise el log.')
+                  }).then(function(){
+                  Create.at(create).payingWithToken(account, amountPago, {from: account, value: amountETH}).then(function(){
+                        Create.at(create).ownerBill(account).then(function(data){
+                                let dataCoin = data
+                                let pendiente = dataCoin[1].toString()
+                                self.setStatusClient("Transaccion realizada correctamente.Queda pendiente por pagar "+pendiente+" Weis de la factura con ID: "+idPago)
+                                alert("Transaccion realizada correctamente.Queda pendiente por pagar "+pendiente+" Weis de la factura con ID: "+idPago)
+                        })
+                  }).catch(function (e) {
                                 console.log(e)
                                 self.setStatusClient('Error al procesar la transacciÃ³n.Probablemente se deba a falta de fondos, por favor, revise sus fondos en su Wallet y revise el log.')
                   })
+                  })
+        	  }).then(function () {
+                	self.refreshBalance()
+        	  })
 		} else {alert("No tienes suficientes fondos")}
-		if (amountPago > 0 && balance >= amountPago) {
-		     console.log(balance)
-		     Create.at(create).owner().then(function (direc) {
-			console.log("Direc :"+direc)
-			App.payToken(direc, amountPago)
-		  })
-		}
 	})
     })    
   },
 
-  payToken: function(data, amount) {
+  getdir: function () {
+    const self = this
 
-	const self = this
+    JCLCoin.setProvider(web3.currentProvider)
+    JCLCoin.web3.eth.defaultAccount=web3.eth.accounts[0]
+    Factory.setProvider(web3.currentProvider)
+    Factory.web3.eth.defaultAccount=web3.eth.accounts[0]
+    Create.setProvider(web3.currentProvider)
+    Create.web3.eth.defaultAccount=web3.eth.accounts[0]
 
-    	JCLCoin.setProvider(web3.currentProvider)
-    	JCLCoin.web3.eth.defaultAccount=web3.eth.accounts[0]
-    	Factory.setProvider(web3.currentProvider)
-    	Factory.web3.eth.defaultAccount=web3.eth.accounts[0]
-    	Create.setProvider(web3.currentProvider)
-    	Create.web3.eth.defaultAccount=web3.eth.accounts[0]
+    const addressToken = document.getElementById('JCLadd').value
+    const idPago = parseInt(document.getElementById('id_pago2').value)
 
-	receiverCoin = data
+    console.log("La direccion de JCLToken es: "+addressToken)
 
-	let token
+    this.setStatus('Actualizando dirección... (please wait)')
 
-    	JCLCoin.deployed().then(function (instance) {
-        	token = instance
-        	token.transfer(receiverCoin, amount, {from:web3.eth.accounts[0], gas: 1000000}).catch(function (e) {
-                                console.log(e)
-                                self.setStatusClient('Error al procesar la transacciÃ³n.Probablemente se deba a falta de fondos, por favor, revise sus fondos en su Wallet y revise el log.')
-                  })
-    	}).then(function () {
-		self.refreshBalance()
+    let create
+    let factory
+
+    Factory.deployed().then(function (instance) {
+      factory = instance
+      factory.idToOwner(idPago).then(function (address) {
+      	create = address
+	console.log(address)
+	console.log(typeof(addressToken))
+	Create.at(create).setJCLTokenContractAddress(addressToken)
 	})
-   }
+    })
+  }
+
 }
 
 window.App = App
