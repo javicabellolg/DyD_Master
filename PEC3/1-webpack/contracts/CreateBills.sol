@@ -60,11 +60,11 @@ contract createBills is Ownable{
             emit billRegister(_id, _amount, _client);
     }
 
-    modifier paying(address _client, uint _amount) {
-        require(jcltoken.balanceOf(_client) >= _amount);
-	jcltoken.transfer(ownerBill[_client].ownerSupply, _amount);
-	ownerBill[_client].amount = ownerBill[_client].amount.sub(_amount);
-        emit billStatus(ownerBill[_client].amount);
+    modifier paying(address _client, uint _amount) {				//
+        require(jcltoken.balanceOf(_client) >= _amount);			//Modificador para ejecutar el pago con tokens y comprobar balance de cuenta del emisor.
+	jcltoken.transfer(ownerBill[_client].ownerSupply, _amount);		//El contrato es payable, recibe los fondos del emisor y los envía alownerBill[_client].ownerSupply
+	ownerBill[_client].amount = ownerBill[_client].amount.sub(_amount);	//
+        emit billStatus(ownerBill[_client].amount);				//
         _;
     }    
 
@@ -73,7 +73,7 @@ contract createBills is Ownable{
 	value = msg.value;
         ownerBill[_client].amount = ownerBill[_client].amount.sub(value);
         if (ownerBill[_client].amount == 0) {
-		delete ownerBill[msg.sender];
+		delete ownerBill[msg.sender];					// Una vez satisfecha la deuda se elimina el struct y el contrato no acepta mas pagos, pues no existen direcciones donde enviar.
 	}
 	emit billStatus(ownerBill[_client].amount);
 	return (ownerBill[_client].amount);
@@ -84,12 +84,12 @@ contract createBills is Ownable{
     }
 
     function setJCLTokenContractAddress(address _address) external {
-        jcltoken = JCLTokenInterface(_address);
+        jcltoken = JCLTokenInterface(_address);					// Upgradeable JCLToken Address
     }
     
     function bye_bye() external onlyOwner {
-        selfdestruct(msg.sender);
-    }
+        selfdestruct(msg.sender);						// SelfDestruct únicaente puede ser lanzado por el Owner (proveedor)
+    }		
 
     function () public payable{
         revert();

@@ -1,23 +1,19 @@
-// Import the page's CSS. Webpack will know what to do with it.
+// Se importa la página de estilos
 import '../styles/app.css'
 
-// Import libraries we need.
+// Librerías
 import { default as Web3 } from 'web3'
 import { default as contract } from 'truffle-contract'
 
-// Import our contract artifacts and turn them into usable abstractions.
+// Artefactos usados en la abstraccion
 import JCLTokenArtifact from '../../build/contracts/JCLToken.json'
 import FactoryArtifact from '../../build/contracts/JCLFactory.json' 
 import CreateArtifact from '../../build/contracts/createBills.json'
 
-// MetaCoin is our usable abstraction, which we'll use through the code below.
 const JCLCoin = contract(JCLTokenArtifact)
 const Factory = contract(FactoryArtifact)
 const Create = contract(CreateArtifact)
 
-// The following code is simple to show off interacting with your contracts.
-// As your needs grow you will likely need to change its form and structure.
-// For application bootstrapping, check out window.addEventListener below.
 let accounts
 let account
 let receiverCoin
@@ -27,14 +23,14 @@ const App = {
   start: function () {
     const self = this
 
-    // Bootstrap the MetaCoin abstraction for Use.
+    // Bootstrap de todas las instancias para su uso. Se hace en todos los métodos.
     JCLCoin.setProvider(web3.currentProvider) 
     Factory.setProvider(web3.currentProvider)
     Create.setProvider(web3.currentProvider)
     alert("�Bienvenido! Comenzaremos guiando en el uso de la aplicación")
     alert("Comencemos...Aunque la interfaz sea poco amigable, ver�s dos partes bien diferenciadas. La parte del proveedor y la parte del cliente. Para comenzar es necesario que revises si tienes activa en MetaMask la misma cuenta con la que has depslegado los contratos, esta es la cuenta Owner del Factory Contract que crea las facturas.")
     alert("Ahora, por favor, introduce un valor de factura (en Wei), dale un id numérco a la misma y cargala a una cuenta")
-    // Get the initial account balance so it can be displayed.
+    // Balance inicial de cuenta
     web3.eth.getAccounts(function (err, accs) {
       if (err != null) {
         alert('There was an error fetching your accounts.')
@@ -74,6 +70,7 @@ const App = {
 
     var account = web3.eth.accounts[0]
 
+    //Se fuerza refresco continuo para evitar errores en pantalla.
     var accountInterval = setInterval(function () {
 	if (web3.eth.accounts[0] !== account) {
             account = web3.eth.accounts[0];
@@ -84,6 +81,7 @@ const App = {
         }
     }, 500)
 
+    // Se fuerza refresco de balance continuo en área proveedor
     JCLCoin.deployed().then(function (instance) {
       meta = instance
 	return meta.balanceOf(account, { from: account })
@@ -95,6 +93,7 @@ const App = {
       self.setStatus('Error getting balance; see log.')
     })
     
+    // Se fuerza refresco de balance continuo en área cliente
     JCLCoin.deployed().then(function (instance) {
 	meta2 = instance
         return meta2.balanceOf(account, { from: account })

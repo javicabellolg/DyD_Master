@@ -18,7 +18,7 @@ contract JCLFactory is Ownable{
 
     function createBillContract(uint _id, address _client, uint _amount) public onlyOwner {
 	if (idToOwner[_id] == 0) {
-            idToOwner[_id] = new createBills(_client, msg.sender, _id, _amount);  // Hay que tener en cuenta que realmente el mapping relaciona el id con el address del contrato que se genera. ¿quién es el owner, el cliente o el msg.sender?
+            idToOwner[_id] = new createBills(_client, msg.sender, _id, _amount);  // Hay que tener en cuenta que realmente el mapping relaciona el id con el address del contrato que se genera. El Owner del contrato es el msg.sender, siendo este únicamente el proveedor.
         }
     }
 
