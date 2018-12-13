@@ -116,21 +116,21 @@ Aparecerá levantada en `http://localhost:8080`la aplicación.
 ## Interactuando con la aplicación
 Al acceder a la aplicación se tendrá una pantalla similar a la siguiente y que se va a proceder a explicar punto a punto:
 > La visualización de la pantalla no es la mejor y es un punto a mejorar, pero no entra en el alcance de este trabajo.
-![Capture1](./img/1-Pantalla-ppal.png)
+![Capture1](./img/1-Pantalla_ppal.png)
 > Aparecerán mensajes de alerta que guiarán al usuario en los primeros pasos, no obstante se procede a explicar detenidamente.
 Se observan dos partes claramente diferenciadas. La parte del proveedor (arriba izquierda) y la parte del cliente (abajo derecha). Se han puesto conjuntas, aunque no sea la forma mas apropiada, de forma que sea mas sencillo para realizar las pruebas. Lo ideal es que estuviesen en pantallas separadas, pero de esta forma nos permitirá probar todas las funcionalidades en una única pantalla.
 ### Registrando la primera factura
 En primer lugar, la primera información que le aparece al usuario es su cuenta y la cantidad de tokens personales con los que cuenta.
 > Esta información se actualizará automáticamente en cuanto se modifique la cuenta en MetaMask.
 Para registrar la primera factura, es necesario asegurarse que la cuenta activa en MetaMask es la cuenta con la que se realizó el despliegue (o coinbase). En caso contrario, y para guiar al usuario, la transacción fallará y aparecerá un mensaje de alerta al intentar registrar una factura:
-![Capture2](./img/3-Account no owner_1.png)
-![Capture3](./img/4-Account no owner_2.png)
+![Capture2](./img/3-Account_no_owner_1.png)
+![Capture3](./img/4-Account_no_owner_2.png)
 Una vez que se ha asegurado que se tiene la cuenta indicada, se procede a rellenar los siguientes campos:
 - **ID Factura**: Es un ID de referencia de la factura, únicamente atiende códigos numéricos. En el interior del recuadro se copia un ejemplo para guiar al usuario.
 - **Acumulado Factura**: Es un valor numérico y hay que tener en cuenta que se considerará como valor en weis. En el interior del recuadro se hace constar esto mismo para guiar al usuario.
 - **Dirección a quien se requiere el pago**: En un valor alfanumérico que representará la dirección del cliente a quien se requiere el pago.
 Una vez se han rellenado estos campos, se puede proceder al registro de la factura pulsando el botón **Registrar** que se encuentra mas abajo. Inmediatamente aparecerá justo abajo un mensaje indicando que la transacción se está realizando aparecerá la ventana de firma de transacción de MetaMask:
-![Capture4](./img/2-Registro Factura.png)
+![Capture4](./img/2-Registro_Factura.png)
 ### Realizando el Pago
 En primer lugar antes de realizar el pago, hay que tener en cuenta que la cuenta que tiene todos los fondos de tokens personalizados es la cuenta `account[0]`, por lo que es conveniente realizar una transacción a la cuenta `account[1]` para que esta tenga fondos y se pueda hacer una prueba completa de la funcionalidad de la aplicación. Para ello, habría que acceder por consola `$ truffle console --network ganache` y ejecutar el siguiente comando:
 ```
@@ -139,7 +139,7 @@ $ JCLToken.deployed().transfer(web3.eth.accounts[1],300000)
 > Se ha indicado el valor `300000` como ejemplo aunque puede ser cualquier valor siempre que no supere el SupplyInicial
 Para realizar el pago, se utilizará la segunda parte de la aplicación. En ella aparecen los siguientes recuadros, que se pasan a explicar a continuación:
 ![Capture5](./img/6-Pago.png)
-- **Dirección Contrato JCLToken**: Entrada alfanumérica correspondiente a la dirección asignada en la migración al contrato JCLToken. Esto se ha realizado así para que pueda ser _upgradeable_ el contrato. Es posible que en un futuro se cambie de token o se utilice otro token para realizar las transacciones y esto debe ser previsto. 
+- **Dirección Contrato JCLTken**: Entrada alfanumérica correspondiente a la dirección asignada en la migración al contrato JCLToken. Esto se ha realizado así para que pueda ser _upgradeable_ el contrato. Es posible que en un futuro se cambie de token o se utilice otro token para realizar las transacciones y esto debe ser previsto. 
 > NOTA: Por funcionalidad y simplicidad, está previsto para este trabajo que cualquier token ERC20 pueda ser usado con un tipo de cambio 1Token = 1wei. Por tanto, este aplicativo no es productivo porque este hecho supone un problema a nivel de producción. No obstante, demuestra la funcionalidad para este trabajo. Para una versión mas avanzada se utilizará una tasa de cambio que asegure el valor del token en referencia a _wei_ y evitar esta falla de seguridad.
 - **ID Factura**: Entrada numérica que debe coincidir con la factura que se debe abonar. 
 - **Cantidad de JCLTokens a utilizar**: Entrada numérica con la cantidad de tokens a utilizar.
