@@ -1,9 +1,9 @@
-var JCLToken = artifacts.require('./JCLToken.sol')
-var JCLFactory = artifacts.require('./JCLFactory.sol')
-var CreateBills = artifacts.require('./CreateBills.sol')
+var CustToken = artifacts.require('./CustToken.sol')
+var CustFactory = artifacts.require('./CustFactory.sol')
+var CreatePays = artifacts.require('./CreatePays.sol')
 
 module.exports = function (deployer) {
-  deployer.deploy(JCLToken);
-  deployer.deploy(JCLFactory);
-  deployer.deploy(CreateBills, "0x03", "0x00", 1, 10);
+  deployer.deploy(CustToken);
+  deployer.deploy(CustFactory);
+  deployer.deploy(CreatePays, "0x03", "0x00", 1, 1, 1, 1);
 }
