@@ -24,6 +24,12 @@ contract createPays is Ownable{
     uint16 convRate = 1;
     uint value;
     uint penalizedValue;
+    bool penalized1 = true;
+    bool penalized2 = true;
+    bool penalized3 = true;
+    bool penalized4 = true;
+    bool penalized5 = true;
+    bool penalized6 = true;
 
     CustTokenInterface public custoken;
 
@@ -62,28 +68,28 @@ contract createPays is Ownable{
         //uint _amountPenalized;
         if (now >= ownerBill[_client].expiresBill){
             ownerBill[_client].penalized = true;
-            if (now < ownerBill[_client].expiresBill + 1 minutes){ penalizedValue = 10; } else { penalizedValue = 50; }
-            //else if (now >= ownerBill[_client].expiresBill + 1 minutes){
-            //    if (now < ownerBill[_client].expiresBill + 7 minutes) { penalizedValue = 20; }
-            //    else if (now >= ownerBill[_client].expiresBill + 7 minutes){
-            //        if (now < ownerBill[_client].expiresBill + 30 minutes) { penalizedValue = 30; }
-            //        else if (now >= ownerBill[_client].expiresBill + 30 minutes){
-            //            if (now < ownerBill[_client].expiresBill + 90 minutes) { penalizedValue = 100; }
-            //            else if (now >= ownerBill[_client].expiresBill + 90 minutes){
-            //                if (now < ownerBill[_client].expiresBill + 180 minutes) { penalizedValue = 200; }
-            //                else if (now >= ownerBill[_client].expiresBill + 180 minutes){
-            //                    penalizedValue = 2000;// Se inscribe en la blacklist
-            //            }
-            //        }
-            //    }
-            //}
+            if (now < ownerBill[_client].expiresBill + 1 minutes){ require (penalized1); penalizedValue = 10; penalized1 = false;}
+            else if (now >= ownerBill[_client].expiresBill + 1 minutes){
+                if (now < ownerBill[_client].expiresBill + 7 minutes) { require (penalized2); penalizedValue = 20; penalized2 = false;}
+                else if (now >= ownerBill[_client].expiresBill + 7 minutes){
+                    if (now < ownerBill[_client].expiresBill + 30 minutes) { require (penalized3); penalizedValue = 30; penalized3 = false;}
+                    else if (now >= ownerBill[_client].expiresBill + 30 minutes){
+                        if (now < ownerBill[_client].expiresBill + 90 minutes) { require (penalized4); penalizedValue = 100; penalized4 = false;}
+                        else if (now >= ownerBill[_client].expiresBill + 90 minutes){
+                            if (now < ownerBill[_client].expiresBill + 180 minutes) { require (penalized5); penalizedValue = 200; penalized5 = false;}
+                            else if (now >= ownerBill[_client].expiresBill + 180 minutes){
+                                require (penalized6); penalizedValue = 2000; penalized6 = false; // Se inscribe en la blacklist
+                        }
+                    }
+                }
+            }
             //if (now >= ownerBill[_client].expiresBill + 1 hours){
             //    _amountPenalized = ownerBill[_client].amount / 100;
             //ownerBill[_client].amount += 10;
             //} else {
             //    _amountPenalized = ownerBill[_client].amount / 200;
             //    ownerBill[_client].amount += _amountPenalized;
-           //}
+           }
         }
         else { penalizedValue = 0; }
         _;
