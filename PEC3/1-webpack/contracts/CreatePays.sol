@@ -47,6 +47,7 @@ contract createPays is Ownable{
         uint createdBill;
         uint expiresBill;
         bool penalized;
+        bool blacklisted;
     }
 
     Bill[] public bills;
@@ -61,6 +62,7 @@ contract createPays is Ownable{
         ownerBill[_client].createdBill = _created;
         ownerBill[_client].expiresBill = _expires;
         ownerBill[_client].penalized = false;
+        ownerBill[_client].blacklisted = false;
         emit billRegister(_id, _amount, _client);
     }
 
@@ -78,18 +80,13 @@ contract createPays is Ownable{
                         else if (now >= ownerBill[_client].expiresBill + 90 minutes){
                             if (now < ownerBill[_client].expiresBill + 180 minutes) { require (penalized5); penalizedValue = 200; penalized5 = false;}
                             else if (now >= ownerBill[_client].expiresBill + 180 minutes){
-                                require (penalized6); penalizedValue = 2000; penalized6 = false; // Se inscribe en la blacklist
+                                require (penalized6); 
+                                ownerBill[_client].blacklisted = true; // Se habilita inscripción en blacklist
+                            }
                         }
                     }
                 }
             }
-            //if (now >= ownerBill[_client].expiresBill + 1 hours){
-            //    _amountPenalized = ownerBill[_client].amount / 100;
-            //ownerBill[_client].amount += 10;
-            //} else {
-            //    _amountPenalized = ownerBill[_client].amount / 200;
-            //    ownerBill[_client].amount += _amountPenalized;
-           }
         }
         else { penalizedValue = 0; }
         _;
@@ -105,7 +102,6 @@ contract createPays is Ownable{
 
     function payingWithToken(address _client, uint _amount) external payable evaluateExpires (_client) paying (_client, _amount) returns (uint) {
         ownerBill[_client].amount = ownerBill[_client].amount.add(penalizedValue);
-        ownerBill[_client].amount = ownerBill[_client].amount.sub(_amount);
         emit billStatus(ownerBill[_client].amount);
         address(ownerBill[msg.sender].ownerSupply).transfer(msg.value);
         value = msg.value;
@@ -123,6 +119,14 @@ contract createPays is Ownable{
 
     function setJCLTokenContractAddress(address _address) external {
         custoken = CustTokenInterface(_address);
+    }
+
+    function checkMaxPenalized (address _client) public returns (bool){
+        return (ownerBill[_client].blacklisted);
+    }
+
+    function checkMaxPenalized (address _client) public returns (bool){
+        return (ownerBill[_client].amount);
     }
     
     function bye_bye() external onlyOwner {
