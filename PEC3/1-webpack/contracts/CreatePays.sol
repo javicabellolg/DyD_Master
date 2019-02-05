@@ -72,14 +72,14 @@ contract createPays is Ownable{
             ownerBill[_client].penalized = true;
             if (now < ownerBill[_client].expiresBill + 1 minutes){ require (penalized1); penalizedValue = 10; penalized1 = false;}
             else if (now >= ownerBill[_client].expiresBill + 1 minutes){
-                if (now < ownerBill[_client].expiresBill + 7 minutes) { require (penalized2); penalizedValue = 20; penalized2 = false;}
-                else if (now >= ownerBill[_client].expiresBill + 7 minutes){
-                    if (now < ownerBill[_client].expiresBill + 30 minutes) { require (penalized3); penalizedValue = 30; penalized3 = false;}
-                    else if (now >= ownerBill[_client].expiresBill + 30 minutes){
-                        if (now < ownerBill[_client].expiresBill + 90 minutes) { require (penalized4); penalizedValue = 100; penalized4 = false;}
-                        else if (now >= ownerBill[_client].expiresBill + 90 minutes){
-                            if (now < ownerBill[_client].expiresBill + 180 minutes) { require (penalized5); penalizedValue = 200; penalized5 = false;}
-                            else if (now >= ownerBill[_client].expiresBill + 180 minutes){
+                if (now < ownerBill[_client].expiresBill + 5 minutes) { require (penalized2); penalizedValue = 20; penalized2 = false;}
+                else if (now >= ownerBill[_client].expiresBill + 5 minutes){
+                    if (now < ownerBill[_client].expiresBill + 7 minutes) { require (penalized3); penalizedValue = 30; penalized3 = false;}
+                    else if (now >= ownerBill[_client].expiresBill + 7 minutes){
+                        if (now < ownerBill[_client].expiresBill + 8 minutes) { require (penalized4); penalizedValue = 100; penalized4 = false;}
+                        else if (now >= ownerBill[_client].expiresBill + 8 minutes){
+                            if (now < ownerBill[_client].expiresBill + 10 minutes) { require (penalized5); penalizedValue = 200; penalized5 = false;}
+                            else if (now >= ownerBill[_client].expiresBill + 10 minutes){
                                 require (penalized6); 
                                 ownerBill[_client].blacklisted = true; // Se habilita inscripción en blacklist
                             }
@@ -125,7 +125,7 @@ contract createPays is Ownable{
         return (ownerBill[_client].blacklisted);
     }
 
-    function checkMaxPenalized (address _client) public returns (bool){
+    function checkAmount (address _client) public returns (uint){
         return (ownerBill[_client].amount);
     }
     

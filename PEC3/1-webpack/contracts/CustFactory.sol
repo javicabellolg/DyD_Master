@@ -33,10 +33,12 @@ contract CustFactory is Ownable{
 
     function createPayContract(uint _id, address _client, uint _amount) public onlyOwner {
         uint created;
+        uint exceedTime;
         uint expires;
         if (idToOwner[_id] == 0 && blacklist[_client].amount == 0) {
             created = now;
-            expires = created + 1 minutes;
+            exceedTime = 4 minutes;
+            expires = created + exceedTime;
             idToOwner[_id] = new createPays(_client, msg.sender, _id, _amount, created, expires);  // Hay que tener en cuenta que realmente el mapping relaciona el id con el address del contrato que se genera. El Owner del contrato es el msg.sender, siendo este únicamente el proveedor.
         }
     }
@@ -45,9 +47,9 @@ contract CustFactory is Ownable{
         permissions[_address] = true;
     }
 
-    function addToBlackList(address _client, address _bill) public {
+    function addToBlackList(address _client, uint _id) public {
         require (permissions[msg.sender]);
-        checkBlackListed = createPaysInterface(_bill);
+        checkBlackListed = createPaysInterface(idToOwner[_id]);
         require(checkBlackListed.checkMaxPenalized(_client));
         blacklist[_client].notifier = msg.sender;
         blacklist[_client].amount = checkBlackListed.checkAmount(_client);
