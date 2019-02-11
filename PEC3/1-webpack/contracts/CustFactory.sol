@@ -19,6 +19,10 @@ contract createPaysInterface{
     function checkAmount (address _client) public returns (uint);
 }
 
+contract incentivesInterface{
+    function addPoints (address _client) public;
+}
+
 contract CustFactory is Ownable{
     struct black{
         address notifier;
@@ -30,17 +34,14 @@ contract CustFactory is Ownable{
     mapping (address => black) public blacklist;
 
     createPaysInterface public checkBlackListed;
+    incentivesInterface public incentives;
 
-    function createPayContract(uint _id, address _client, uint _amount) public onlyOwner {
-        uint created;
-        uint exceedTime;
-        uint expires;
+    function createPayContract(uint _id, address _client, uint _amount, uint _timeExtra) public onlyOwner {
         if (idToOwner[_id] == 0 && blacklist[_client].amount == 0) {
-            created = now;
-            exceedTime = 4 minutes;
-            expires = created + exceedTime;
-            idToOwner[_id] = new createPays(_client, msg.sender, _id, _amount, created, expires);  // Hay que tener en cuenta que realmente el mapping relaciona el id con el address del contrato que se genera. El Owner del contrato es el msg.sender, siendo este únicamente el proveedor.
+            idToOwner[_id] = new createPays(_client, msg.sender, _id, _amount, now, now + _timeExtra);  // Hay que tener en cuenta que realmente el mapping relaciona el id con el address del contrato que se genera. El Owner del contrato es el msg.sender, siendo este únicamente el proveedor.
+            incentives.addPoints(_client);
         }
+        //PONER UN ELSE CON UN EVENTO QUE INDIQUE QUE NO SE HA CREADO EL CONTRATO
     }
 
     function permissionAdd(address _address) public onlyOwner{
@@ -53,6 +54,17 @@ contract CustFactory is Ownable{
         require(checkBlackListed.checkMaxPenalized(_client));
         blacklist[_client].notifier = msg.sender;
         blacklist[_client].amount = checkBlackListed.checkAmount(_client);
+    }
+
+    function deleteFromBlackList(address _client, uint _id) public {
+        require (permissions[msg.sender]);
+        checkBlackListed = createPaysInterface(idToOwner[_id]);
+        require (checkBlackListed.checkAmount(_client) == 0);
+        delete blacklist[_client];
+    }
+
+    function setIncentiveContract(address _address) external{
+        incentives = incentivesInterface(_address);
     }
 
     function bye_bye() external onlyOwner {

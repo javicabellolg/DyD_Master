@@ -11,11 +11,16 @@ pragma solidity 0.4.24;
 
 import "./Ownable.sol";
 import "./CustToken.sol";
+//import "./Token.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract CustTokenInterface{
     function balanceOf(address owner) public view returns (uint256);
     function transfer(address to, uint256 value) public view returns (bool);
+}
+
+contract incentivesInterface_Pays{
+    function addPoints (address _client) public;
 }
 
 contract createPays is Ownable{
@@ -32,6 +37,7 @@ contract createPays is Ownable{
     bool penalized6 = true;
 
     CustTokenInterface public custoken;
+    incentivesInterface_Pays public incentives;
 
     // Definicion de Eventos
 
@@ -102,6 +108,7 @@ contract createPays is Ownable{
 
     function payingWithToken(address _client, uint _amount) external payable evaluateExpires (_client) paying (_client, _amount) returns (uint) {
         ownerBill[_client].amount = ownerBill[_client].amount.add(penalizedValue);
+        penalizedValue = 0;
         emit billStatus(ownerBill[_client].amount);
         address(ownerBill[msg.sender].ownerSupply).transfer(msg.value);
         value = msg.value;
